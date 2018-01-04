@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>sqlexecreaderparam</Title>
+			<Shortcut>sqlexecreaderparam</Shortcut>
+			<Description>méthode qui exécute une requête avec paramètre, récupère le résultat avec un SqlDataReader,
+         et stocke les données dans une collection d'entités</Description>
+			<Author>Cyril Seguenot</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>entity</ID>
+					<ToolTip>Classe des entités à créer</ToolTip>
+					<Default>string</Default>
+				</Literal>
+				<Literal>
+					<ID>param</ID>
+					<ToolTip>Valeur du paramètre</ToolTip>
+					<Default>Id</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="csharp">
+         <![CDATA[public static List<$entity$> Get$entity$s(int $param$)
+		{
+			var list = new List<$entity$>();
+
+         var cmd = new SqlCommand();
+         cmd.CommandText = @"select  from  where  = @$param$";
+         cmd.Parameters.Add(new SqlParameter {
+               SqlDbType = SqlDbType.Int, ParameterName = "@$param$", Value = $param$ });
+                 
+			using (var conn = new SqlConnection(Settings.Default.NorthwindConnectionString))
+			{
+				cmd.Connection = conn;
+				conn.Open();
+
+				using (SqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+               {
+                  var item = new $entity$();
+						item.Id = (int)reader["Id"];
+                  list.Add(item);
+               }
+				}
+			}
+
+			return list;
+		}]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

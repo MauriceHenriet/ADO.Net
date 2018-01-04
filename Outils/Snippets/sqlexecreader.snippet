@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>sqlexecreader</Title>
+			<Shortcut>sqlexecreader</Shortcut>
+			<Description>méthode qui exécute une requête, récupère le résultat avec un SqlDataReader,
+         et stocke les données dans une collection d'entités</Description>
+			<Author>Cyril Seguenot</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>entity</ID>
+					<ToolTip>Classe des entités à créer</ToolTip>
+					<Default>string</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="csharp">
+      <![CDATA[public static List<$entity$> Get$entity$s()
+		{
+			var list = new List<$entity$>();
+         
+         var cmd = new SqlCommand();
+         cmd.CommandText = @"select  from ";      
+
+			using (var conn = new SqlConnection(Settings.Default.NorthwindConnectionString))
+			{
+				cmd.Connection = conn;
+				conn.Open();
+
+				using (SqlDataReader reader = cmd.ExecuteReader())
+				{
+					while (reader.Read())
+               {
+                  var item = new $entity$();
+						item.Id = (int)reader["Id"];
+                  list.Add(item);
+               }
+				}
+			}
+
+			return list;
+		}]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

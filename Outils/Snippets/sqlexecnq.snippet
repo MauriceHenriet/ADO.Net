@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>sqlexecnq</Title>
+			<Shortcut>sqlexecnq</Shortcut>
+			<Description>méthode exécutant une requête sans récupération de données</Description>
+			<Author>Cyril Seguenot</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>MethodName</ID>
+					<ToolTip>Nom de la méthode</ToolTip>
+					<Default>MethodName</Default>
+				</Literal>
+            <Literal>
+					<ID>param</ID>
+					<ToolTip>Valeur du paramètre</ToolTip>
+					<Default>id</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="csharp">
+         <![CDATA[public static void $MethodName$(int $param$)
+         {
+            var cmd = new SqlCommand();
+            cmd.CommandText = @"delete from  where Id = @$param$";
+            cmd.Parameters.Add(new SqlParameter {
+                  SqlDbType = SqlDbType.Int, ParameterName = "@$param$", Value = $param$ });
+                   
+            using (var conn = new SqlConnection(Settings.Default.NorthwindConnectionString))
+            {
+               cmd.Connection = conn;
+               conn.Open();
+               cmd.ExecuteNonQuery();
+            }
+         }]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>sqlexecnqtran</Title>
+			<Shortcut>sqlexecnqtran</Shortcut>
+			<Description>méthode exécutant une requête sans récupération de données dans une transaction</Description>
+			<Author>Cyril Seguenot</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Literal>
+					<ID>MethodName</ID>
+					<ToolTip>Nom de la méthode</ToolTip>
+					<Default>MethodName</Default>
+				</Literal>
+            <Literal>
+					<ID>param</ID>
+					<ToolTip>Valeur du paramètre</ToolTip>
+					<Default>Id</Default>
+				</Literal>
+			</Declarations>
+			<Code Language="csharp">
+         <![CDATA[public static void $MethodName$(int $param$)
+         {
+            var cmd = new SqlCommand();
+            cmd.CommandText = @"select  from  where  = @$param$";
+            cmd.Parameters.Add(new SqlParameter {
+                  SqlDbType = SqlDbType.Int, ParameterName = "@$param$", Value = $param$ });
+    
+            using (var conn = new SqlConnection(Settings.Default.NorthwindConnectionString))
+            {
+               conn.Open();
+               cmd.Connection = conn;
+               
+               using (SqlTransaction tran = conn.BeginTransaction())
+               {
+                  cmd.Transaction = tran;
+                  cmd.ExecuteNonQuery();
+                  tran.Commit();
+               }
+            }
+         }]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>
